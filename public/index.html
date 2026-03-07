@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Gringotts Bank — Apply</title>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Crimson+Text:ital,wght@0,400;1,400&display=swap" rel="stylesheet"/>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: #1e1e1e;
+      color: #f5f0e8;
+      font-family: 'Crimson Text', serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 60px 24px;
+    }
+
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 26px;
+      letter-spacing: 3px;
+      color: #c9a84c;
+      text-align: center;
+      margin-bottom: 40px;
+    }
+
+    form {
+      background: #2a2a2a;
+      border: 1px solid #3a3a3a;
+      border-radius: 4px;
+      padding: 40px;
+      width: 100%;
+      max-width: 520px;
+    }
+
+    .section {
+      font-family: 'Cinzel', serif;
+      font-size: 10px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #c9a84c;
+      border-bottom: 1px solid #2e2a22;
+      padding-bottom: 8px;
+      margin: 24px 0 16px;
+    }
+
+    .section:first-child { margin-top: 0; }
+
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+
+    .field { margin-bottom: 14px; }
+
+    label {
+      display: block;
+      font-family: 'Cinzel', serif;
+      font-size: 9px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #9a8f7a;
+      margin-bottom: 5px;
+    }
+
+    input {
+      width: 100%;
+      padding: 9px 12px;
+      background: #1e1e1e;
+      border: 1px solid #3a3a3a;
+      border-radius: 3px;
+      color: #f5f0e8;
+      font-family: 'Crimson Text', serif;
+      font-size: 16px;
+      outline: none;
+    }
+
+    input:focus { border-color: #c9a84c; }
+    input:disabled { color: #9a8f7a; }
+    input::placeholder { color: #555555; }
+
+    button[type="submit"] {
+      width: 100%;
+      margin-top: 28px;
+      padding: 13px;
+      background: transparent;
+      border: 1px solid #c9a84c;
+      color: #c9a84c;
+      font-family: 'Cinzel', serif;
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 3px;
+    }
+
+    button[type="submit"].loading { opacity: 0.5; pointer-events: none; }
+
+    #result {
+      display: none;
+      background: #2a2a2a;
+      border: 1px solid #3a3a3a;
+      border-radius: 4px;
+      padding: 56px 40px;
+      width: 100%;
+      max-width: 520px;
+      text-align: center;
+    }
+
+    #resultIcon { font-size: 44px; display: block; margin-bottom: 16px; }
+
+    #resultTitle {
+      font-family: 'Cinzel', serif;
+      font-size: 18px;
+      letter-spacing: 2px;
+      margin-bottom: 12px;
+    }
+
+    #resultTitle.approved { color: #7ec8a0; }
+    #resultTitle.review   { color: #c9a84c; }
+    #resultTitle.denied   { color: #c87e7e; }
+
+    #resultMessage {
+      font-size: 17px;
+      font-style: italic;
+      color: #9a8f7a;
+      line-height: 1.6;
+      margin-bottom: 28px;
+    }
+
+    .back-btn {
+      background: transparent;
+      border: 1px solid #3a3a3a;
+      color: #9a8f7a;
+      padding: 9px 22px;
+      font-family: 'Cinzel', serif;
+      font-size: 9px;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      cursor: pointer;
+      border-radius: 3px;
+    }
+  </style>
+</head>
+<body>
+
+  <h1>🪙 Gringotts Bank</h1>
+
+  <form id="applyForm">
+
+    <div class="section">Personal Information</div>
+
+    <div class="row">
+      <div class="field">
+        <label>First Name</label>
+        <input type="text" id="name_first" placeholder="Harry" required />
+      </div>
+      <div class="field">
+        <label>Last Name</label>
+        <input type="text" id="name_last" placeholder="Potter" required />
+      </div>
+    </div>
+
+    <div class="field">
+      <label>Email Address</label>
+      <input type="email" id="email_address" placeholder="harry@example.com" required />
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label>Date of Birth</label>
+        <input type="text" id="birth_date" placeholder="YYYY-MM-DD" required />
+      </div>
+      <div class="field">
+        <label>Social Security No.</label>
+        <input type="text" id="document_ssn" placeholder="123456789" maxlength="9" required />
+      </div>
+    </div>
+
+    <div class="section">Home Address</div>
+
+    <div class="field">
+      <label>Address Line 1</label>
+      <input type="text" id="address_line_1" placeholder="4 Privet Drive" required />
+    </div>
+
+    <div class="field">
+      <label>Address Line 2 <span style="opacity:0.4">(optional)</span></label>
+      <input type="text" id="address_line_2" placeholder="Under the Stairs" />
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label>City</label>
+        <input type="text" id="address_city" placeholder="Little Whinging" required />
+      </div>
+      <div class="field">
+        <label>State</label>
+        <input type="text" id="address_state" placeholder="NY" maxlength="2" required />
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="field">
+        <label>ZIP Code</label>
+        <input type="text" id="address_postal_code" placeholder="10001" required />
+      </div>
+      <div class="field">
+        <label>Country</label>
+        <input type="text" value="US" disabled />
+      </div>
+    </div>
+
+    <button type="submit" id="submitBtn">Open My Vault ⚡</button>
+
+  </form>
+
+  <div id="result">
+    <span id="resultIcon"></span>
+    <div id="resultTitle"></div>
+    <p id="resultMessage"></p>
+    <button class="back-btn" onclick="resetForm()">← New Application</button>
+  </div>
+
+<script>
+  const outcomes = {
+    'Approved':      { icon: '🗝️', title: 'Vault Approved',          message: 'Welcome to Gringotts. Your vault has been opened and your account details are on their way.',      css: 'approved' },
+    'Manual Review': { icon: '🔍', title: 'Under Review',             message: 'Our goblins are reviewing your application. We shall be in touch within 1–2 business days.',      css: 'review'   },
+    'Deny':          { icon: '🚫', title: 'Application Unsuccessful', message: 'We regret that we are unable to open a vault for you at this time. You may reapply after 30 days.', css: 'denied'  }
+  };
+
+  document.getElementById('applyForm').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const btn = document.getElementById('submitBtn');
+    btn.textContent = 'Consulting the Goblins…';
+    btn.classList.add('loading');
+
+    const formData = {
+      name_first:          document.getElementById('name_first').value.trim(),
+      name_last:           document.getElementById('name_last').value.trim(),
+      email_address:       document.getElementById('email_address').value.trim(),
+      birth_date:          document.getElementById('birth_date').value.trim(),
+      document_ssn:        document.getElementById('document_ssn').value.trim(),
+      address_line_1:      document.getElementById('address_line_1').value.trim(),
+      address_line_2:      document.getElementById('address_line_2').value.trim(),
+      address_city:        document.getElementById('address_city').value.trim(),
+      address_state:       document.getElementById('address_state').value.trim().toUpperCase(),
+      address_postal_code: document.getElementById('address_postal_code').value.trim(),
+    };
+
+    try {
+      const response = await fetch('/apply', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+      });
+      const data = await response.json();
+      showResult(data.outcome);
+    } catch (err) {
+      showResult('Error');
+    }
+  });
+
+  function showResult(outcome) {
+    const content = outcomes[outcome] || { icon: '⚠️', title: 'Something Went Wrong', message: 'Please try again or contact a Gringotts goblin for assistance.', css: 'denied' };
+    document.getElementById('resultIcon').textContent    = content.icon;
+    document.getElementById('resultTitle').textContent   = content.title;
+    document.getElementById('resultTitle').className     = content.css;
+    document.getElementById('resultMessage').textContent = content.message;
+    document.getElementById('applyForm').style.display   = 'none';
+    document.getElementById('result').style.display      = 'block';
+  }
+
+  function resetForm() {
+    document.getElementById('applyForm').reset();
+    const btn = document.getElementById('submitBtn');
+    btn.textContent = 'Open My Vault ⚡';
+    btn.classList.remove('loading');
+    document.getElementById('applyForm').style.display = 'block';
+    document.getElementById('result').style.display    = 'none';
+  }
+</script>
+</body>
+</html>
