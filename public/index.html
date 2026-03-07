@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Gringotts Bank — Apply</title>
+  <title>Atlas Bank — Apply</title>
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600&family=Crimson+Text:ital,wght@0,400;1,400&display=swap" rel="stylesheet"/>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -79,6 +79,7 @@
     input:focus { border-color: #c9a84c; }
     input:disabled { color: #9a8f7a; }
     input::placeholder { color: #555555; }
+    input:invalid:not(:placeholder-shown) { border-color: #c87e7e; }
 
     button[type="submit"] {
       width: 100%;
@@ -145,7 +146,7 @@
 </head>
 <body>
 
-  <h1>🪙 Gringotts Bank</h1>
+  <h1>🏦 Atlas Bank</h1>
 
   <form id="applyForm">
 
@@ -154,27 +155,27 @@
     <div class="row">
       <div class="field">
         <label>First Name</label>
-        <input type="text" id="name_first" placeholder="Harry" required />
+        <input type="text" id="name_first" placeholder="John" required />
       </div>
       <div class="field">
         <label>Last Name</label>
-        <input type="text" id="name_last" placeholder="Potter" required />
+        <input type="text" id="name_last" placeholder="Smith" required />
       </div>
     </div>
 
     <div class="field">
       <label>Email Address</label>
-      <input type="email" id="email_address" placeholder="harry@example.com" required />
+      <input type="email" id="email_address" placeholder="john@example.com" required />
     </div>
 
     <div class="row">
       <div class="field">
         <label>Date of Birth</label>
-        <input type="text" id="birth_date" placeholder="YYYY-MM-DD" required />
+        <input type="text" id="birth_date" placeholder="YYYY-MM-DD" pattern="\d{4}-\d{2}-\d{2}" title="Format: YYYY-MM-DD" required />
       </div>
       <div class="field">
         <label>Social Security No.</label>
-        <input type="text" id="document_ssn" placeholder="123456789" maxlength="9" required />
+        <input type="text" id="document_ssn" placeholder="123456789" pattern="\d{9}" maxlength="9" title="9 digits, no dashes" required />
       </div>
     </div>
 
@@ -182,29 +183,29 @@
 
     <div class="field">
       <label>Address Line 1</label>
-      <input type="text" id="address_line_1" placeholder="4 Privet Drive" required />
+      <input type="text" id="address_line_1" placeholder="123 Main St" required />
     </div>
 
     <div class="field">
       <label>Address Line 2 <span style="opacity:0.4">(optional)</span></label>
-      <input type="text" id="address_line_2" placeholder="Under the Stairs" />
+      <input type="text" id="address_line_2" placeholder="Apt 4B" />
     </div>
 
     <div class="row">
       <div class="field">
         <label>City</label>
-        <input type="text" id="address_city" placeholder="Little Whinging" required />
+        <input type="text" id="address_city" placeholder="New York" required />
       </div>
       <div class="field">
         <label>State</label>
-        <input type="text" id="address_state" placeholder="NY" maxlength="2" required />
+        <input type="text" id="address_state" placeholder="NY" pattern="[A-Za-z]{2}" maxlength="2" title="2-letter state code" required />
       </div>
     </div>
 
     <div class="row">
       <div class="field">
         <label>ZIP Code</label>
-        <input type="text" id="address_postal_code" placeholder="10001" required />
+        <input type="text" id="address_postal_code" placeholder="10001" pattern="\d{5}" maxlength="5" title="5-digit ZIP code" required />
       </div>
       <div class="field">
         <label>Country</label>
@@ -212,7 +213,7 @@
       </div>
     </div>
 
-    <button type="submit" id="submitBtn">Open My Vault ⚡</button>
+    <button type="submit" id="submitBtn">Submit Application</button>
 
   </form>
 
@@ -225,15 +226,15 @@
 
 <script>
   const outcomes = {
-    'Approved':      { icon: '🗝️', title: 'Vault Approved',          message: 'Welcome to Gringotts. Your vault has been opened and your account details are on their way.',      css: 'approved' },
-    'Manual Review': { icon: '🔍', title: 'Under Review',             message: 'Our goblins are reviewing your application. We shall be in touch within 1–2 business days.',      css: 'review'   },
-    'Deny':          { icon: '🚫', title: 'Application Unsuccessful', message: 'We regret that we are unable to open a vault for you at this time. You may reapply after 30 days.', css: 'denied'  }
+    'Approved':      { icon: '✅', title: 'Approved',       message: 'Success! Your account has been created.',                   css: 'approved' },
+    'Manual Review': { icon: '🔍', title: 'Under Review',   message: 'Thanks for submitting, we\'ll be in touch shortly.',        css: 'review'   },
+    'Denied':        { icon: '❌', title: 'Denied',          message: 'Sorry, your application was not successful.',                css: 'denied'   }
   };
 
   document.getElementById('applyForm').addEventListener('submit', async function(e) {
     e.preventDefault();
     const btn = document.getElementById('submitBtn');
-    btn.textContent = 'Consulting the Goblins…';
+    btn.textContent = 'Processing…';
     btn.classList.add('loading');
 
     const formData = {
@@ -247,6 +248,7 @@
       address_city:        document.getElementById('address_city').value.trim(),
       address_state:       document.getElementById('address_state').value.trim().toUpperCase(),
       address_postal_code: document.getElementById('address_postal_code').value.trim(),
+      address_country_code: 'US',
     };
 
     try {
@@ -263,7 +265,7 @@
   });
 
   function showResult(outcome) {
-    const content = outcomes[outcome] || { icon: '⚠️', title: 'Something Went Wrong', message: 'Please try again or contact a Gringotts goblin for assistance.', css: 'denied' };
+    const content = outcomes[outcome] || { icon: '⚠️', title: 'Something Went Wrong', message: 'Please try again or contact support for assistance.', css: 'denied' };
     document.getElementById('resultIcon').textContent    = content.icon;
     document.getElementById('resultTitle').textContent   = content.title;
     document.getElementById('resultTitle').className     = content.css;
@@ -275,7 +277,7 @@
   function resetForm() {
     document.getElementById('applyForm').reset();
     const btn = document.getElementById('submitBtn');
-    btn.textContent = 'Open My Vault ⚡';
+    btn.textContent = 'Submit Application';
     btn.classList.remove('loading');
     document.getElementById('applyForm').style.display = 'block';
     document.getElementById('result').style.display    = 'none';
